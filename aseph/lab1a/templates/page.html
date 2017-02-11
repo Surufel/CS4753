@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html>
+
+<head>
+  <meta httpp-equiv="Content-Type" content="text/html" charset="UTF-8">
+  <title>CS4753 | Image Uploader | Sifer Aseph</title>
+</head>
+
+<body>
+  <div>
+
+  <h3>Well, this is something!</h3>
+
+  <br />
+
+  {% if currentPage %}
+    <ul>
+      {% for anImage in currentPage %}
+      <li>
+        <img src="{{ anImage.image_file.url }}" width=250em height=400em>
+        <br />Caption: {{ anImage.caption }}
+        <br />Date: {{ anImage.date }}
+      </li>
+      {% endfor %}
+    </ul>
+  {% else %}
+    <p>No image so far.</p>
+  {% endif %}
+
+  <div class="pagination">
+    <span class="step-links">
+        {% if currentPage.has_previous %}
+        <a href="?page={{ currentPage.previous_page_number }}">Previous</a>
+        {% endif %}
+        <span class="current">
+            Page {{ currentPage.number }} of {{ currentPage.paginator.num_pages }}.
+        </span>
+        {% if currentPage.has_next %}
+        <a href="?page={{ currentPage.next_page_number }}">Next</a>
+        {% endif %}
+    </span>
+</div>
+
+    <form action="{% url "page" %}" method="post" enctype="multipart/form-data">
+  {% csrf_token %}
+    {{ formset.management_form }}
+    {% for form in formset %}
+      <p>{{ form.non_field_errors }}</p>
+      <p>{{ form.image_file.label_tag }} {{ form.image_file.help_text }}</p>
+      <p>
+        {{ form.image_file.errors }}
+        {{ form.image_file }}
+      </p>
+    {% endfor %}
+      <p><input type="submit" value="Upload" /></p>
+  </form>
+
+  </div>
+</body>
+
+</html>
